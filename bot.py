@@ -4,14 +4,14 @@ import os
 import telebot
 from dotenv import load_dotenv
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
-from menus import start_menu, categories, new_transaction_title
+from menus import start_menu
 
 load_dotenv()
 
 bot = telebot.TeleBot(os.getenv("BOT_TOKEN"))
 allow_users = [139654828]
 user_dict = {"chat_id":""}
-
+categories = ["Taxi", "HomeCredit", "Bars"]
 
 class transaction:
     def __init__(self, user):
@@ -46,27 +46,31 @@ def stats(message):
 
 
 @bot.message_handler(commands=['new'])
-def send_welcome(message):
-    user = message.chat.id
-    trs = transaction(user)
-    user_dict['chat_id'] = trs
-    msg = bot.send_message(message.chat.id, "Укажи потраченную сумму.. 👇👇👇")
-    bot.register_next_step_handler(msg, get_categories)
-
-
-def get_categories(message):
-    msg = bot.send_message(message.chat.id, "Укажи категорию.. 👇👇👇")
-    categories = message.text
-    trs = user_dict['chat_id']
-    trs.amount = message.text
+def get_transactions(message):
+    msg = bot.reply_to(message, "Укажите потраченную сумму и категорию.. 🔥")
     bot.register_next_step_handler(msg, check_transactios)
 
 
 def check_transactios(message):
-    trs = user_dict['chat_id']
-    trs.category = message.text
-    bot.reply_to(message, f"{trs.amount}, {trs.category}")
-    
+    message_list = message.text.split()
+    if len(message_list) == 2:
+        amount = message_list[0]
+        category = message_list[1]
+        if category not in categories:
+            msg = bot.reply_to(message, "Current category not found. Try again.. ❌")
+            bot.register_next_step_handler(msg, get_transactions(msg))
+        else:
+            msg = bot.reply_to(message, "Done")
+    else:
+        msg = bot.reply_to(message, "Not correct data. Try again.. ❌")
+
+
+
+
+
+
+
+
 
 @bot.message_handler(commands=['ping'])
 def ping(message):
@@ -75,5 +79,7 @@ def ping(message):
 
 
 
+
 if __name__ == '__main__':
-    bot.polling()
+    bot.infinity_polling()
+    #bot.polling()
