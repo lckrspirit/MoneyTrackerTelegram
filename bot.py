@@ -10,14 +10,7 @@ load_dotenv()
 
 bot = telebot.TeleBot(os.getenv("BOT_TOKEN"))
 allow_users = [139654828]
-user_dict = {"chat_id":""}
-categories = ["Taxi", "HomeCredit", "Bars"]
-
-class transaction:
-    def __init__(self, user):
-        user = user
-        amount = None
-        category = None
+categories = ["taxi", "homecredit", "bar", "transport", "coffie", "games", "home", "internet", "phone"]
 
 
 def get_stats():
@@ -56,20 +49,13 @@ def check_transactios(message):
     if len(message_list) == 2:
         amount = message_list[0]
         category = message_list[1]
-        if category not in categories:
+        if category.lower() not in categories:
             msg = bot.reply_to(message, "Current category not found. Try again.. ❌")
             bot.register_next_step_handler(msg, get_transactions(msg))
         else:
-            msg = bot.reply_to(message, "Done")
+            msg = bot.reply_to(message, "Done..")
     else:
         msg = bot.reply_to(message, "Not correct data. Try again.. ❌")
-
-
-
-
-
-
-
 
 
 @bot.message_handler(commands=['ping'])
@@ -77,9 +63,8 @@ def ping(message):
     bot.send_message(message.chat.id, "pong 🪃")
 
 
-
-
-
 if __name__ == '__main__':
-    bot.infinity_polling()
-    #bot.polling()
+    try:
+        bot.infinity_polling()
+    except ValueError:
+        print("Ops..")
