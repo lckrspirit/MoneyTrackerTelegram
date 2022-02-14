@@ -4,13 +4,20 @@ import os
 import telebot
 from dotenv import load_dotenv
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
-from menus import start_menu
+
 
 load_dotenv()
+
 
 bot = telebot.TeleBot(os.getenv("BOT_TOKEN"))
 allow_users = [139654828]
 categories = ["taxi", "homecredit", "bar", "transport", "coffie", "games", "home", "internet", "phone"]
+
+start_menu = '''
+/new - Внести новый расход 🖊
+/stats - Сколько было потрачено сегодня 📊
+/ping - Чекнуть связь с ботом. 
+'''
 
 
 def get_stats():
