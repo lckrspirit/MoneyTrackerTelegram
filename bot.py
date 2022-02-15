@@ -2,13 +2,14 @@
 
 import os
 import telebot
+import sqlite3
 from dotenv import load_dotenv
 from telebot.types import InlineKeyboardMarkup, InlineKeyboardButton
 
 
 load_dotenv()
 
-
+db = sqlite3.connect('moneytrk.db')
 bot = telebot.TeleBot(os.getenv("BOT_TOKEN"))
 allow_users = [139654828]
 categories = ["taxi", "homecredit", "bar", "transport", "coffie", "games", "home", "internet", "phone"]
@@ -57,12 +58,25 @@ def check_transactios(message):
         amount = message_list[0]
         category = message_list[1]
         if category.lower() not in categories:
-            msg = bot.reply_to(message, "Current category not found. Try again.. ❌")
-            bot.register_next_step_handler(msg, get_transactions(msg))
+            msg = bot.reply_to(message, 'Create new category?')
+            bot.register_next_step_handler(msg, new_category(msg, category))
         else:
             msg = bot.reply_to(message, "Done..")
     else:
         msg = bot.reply_to(message, "Not correct data. Try again.. ❌")
+
+
+def new_category(message, category):
+    msg = bot.reply_to(message, f"Add new category - {category}\nSend - \"+\"")
+    bot.register_next_step_handler(msg, aprove_new_category(msg))
+
+
+def aprove_new_category(message):
+    if message.text == "+":
+        # TODO: Insert into db new category
+        
+
+
 
 
 @bot.message_handler(commands=['ping'])
