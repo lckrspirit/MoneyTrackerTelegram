@@ -11,6 +11,18 @@ My personal telegram bot for tracking expenses.
     ```
     $ ./bot.py
     ```
+
+Через сбору:
+
+1) В корневом каталоге проекта, собираем контейнер:
+    ```
+    $ docker build -t bot-beta:v0.1 .
+    ```
+
+2) Ранним наш контейнер:
+    ```
+    $ docker run -ti --name=MoneyTrk bot-beta:v0.1
+    ```
 ***
 Файлы:
  - bot.py - главный файл с ботом, запускаем его и бот начинает слушать команды:
@@ -24,7 +36,7 @@ My personal telegram bot for tracking expenses.
  - `/ping` - бот отправит в ответ pong, сделано для простого мониторинга бота. 
 
 
-Схема базы данных, табличные связи:
+Схема базы данных, табличные связи (На данном этапе схема упрощенная):
 
 ![database-schemes](schemes-pic.png)
 
