@@ -33,10 +33,20 @@ def insert_dbdata(sql):
         print("Db problems..")
     
 
+def grep_dbdate(sql):
+    try:
+        db = sqlite3.connect('db/moneytrk.db')
+        cursor = db.cursor()
+        cursor.execute(sql)
+        return cursor.fetchall()[0]
+    except ValueError:
+        print("Db problems..")
+
+
 def get_stats():
     message = f"Потрачено сегодня..💸 \n--\n"
-    #Запрос в базу, посмотреть, где дергаем количество транзакция и сумму.
-    amount, transactions = 400, 3
+    sql_req = f"SELECT count(amount), sum(amount) from transactions WHERE date >= datetime('now');"
+    amount, transactions = grep_dbdate(sql_req)
     message += f"Потрачено сегодня: {amount}\nТранзакции за сегодня: {transactions}"
     return message
 
