@@ -1,0 +1,33 @@
+version: "2.2"
+
+services:
+  sqlite:
+    container_name: MoneyTrk-db
+    image: nouchka/sqlite3:latest
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./db:/root/db/
+    restart: always
+
+  app:
+    container_name: MoneyTrk-bot
+    build: .
+    volumes:
+      - ./app:/project/app
+      - ./db:/project/db
+    restart: always
+
+  grafana:
+    container_name: MoneyTrk-graf
+    image: grafana/grafana
+    depends_on:
+      - sqlite
+      - app
+    ports:
+      - "3000:3000"
+    user: "$UID:$GID"
+    volumes:
+      - ./db:/root/db:ro
+      - ./grafana-plugins:/var/lib/grafana/plugins/:rw
+

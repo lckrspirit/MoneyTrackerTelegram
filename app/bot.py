@@ -13,7 +13,7 @@ load_dotenv()
 
 bot = telebot.TeleBot(os.getenv("BOT_TOKEN"))
 allow_users = [139654828]
-categories = ["taxi", "homecredit", "bar", "transport", "coffie", "games", "home", "internet", "phone"]
+categories = ["taxi", "homecredit", "bar", "transport", "coffie", "games", "home", "internet", "phone", "market"]
 category = ""
 
 start_menu = '''
@@ -45,7 +45,7 @@ def grep_dbdate(sql):
 
 def get_stats():
     message = f"Потрачено сегодня..💸 \n--\n"
-    sql_req = f"SELECT count(amount), sum(amount) from transactions WHERE date >= datetime('now');"
+    sql_req = f"SELECT count(amount), sum(amount) from transactions WHERE date >= datetime('now', 'start of day', 'localtime');"
     amount, transactions = grep_dbdate(sql_req)
     message += f"Потрачено сегодня: {amount}\nТранзакции за сегодня: {transactions}"
     return message
