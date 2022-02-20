@@ -34,7 +34,7 @@ services:
 
   nginx:
     container_name: MoneyTrk-ingress
-    image: nginx/latest
+    image: nginx:latest
     depends_on:
       - grafana
     ports:
